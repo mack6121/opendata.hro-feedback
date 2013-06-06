@@ -1,0 +1,36 @@
+{% extends "basis_layout.html" %}{% load i18n %}
+
+{% block titel %}{% trans "Request a dataset" %}{% endblock %}
+
+{% block inhalt %}
+<h1 class="page_heading">
+    {% trans "Dataset request" %}
+</h1>
+<div class="row">
+    <div class="span12">
+        <div id="minornavigation">
+            <ul class="nav nav-pills">
+            	<li><a href="{% url liste_vorschlaege %}"><img src="http://www.opendata-hro.de/images/icons/page_white_stack.png" height="16px" width="16px" alt="None" class="inline-icon " /> {% trans "List" %}</a></li>
+                <li class="active"><a href="{% url sende_vorschlag %}"><img src="http://www.opendata-hro.de/images/icons/page_white_add.png" height="16px" width="16px" alt="None" class="inline-icon " /> {% trans "Dataset requests" %}</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="span9 content-outer">
+        <div id="content">
+            <div style="margin-top:20px; margin-bottom:30px; margin-left:10px">
+                <p>{% blocktrans with url=url_liste_vorschlaege %}Your dataset request has been successfully submitted.<br><a href="{{ url }}">List already requested datasets.</a>{% endblocktrans %}</p>
+            </div>
+        </div> <!-- /content -->
+    </div>
+    <div class="span3 sidebar-outer">
+        <div id="sidebar">
+            <ul class="widget-list">
+                <primarysidebar>
+                </primarysidebar>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

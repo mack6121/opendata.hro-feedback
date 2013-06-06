@@ -1,0 +1,56 @@
+{% extends "basis_layout.html" %}{% load i18n %}
+
+{% block titel %}{% trans "Request a dataset" %}{% endblock %}
+
+{% block inhalt %}
+<h1 class="page_heading">
+    {% trans "Dataset request" %}: {{ vorschlag.betreff }}
+</h1>
+<div class="row">
+    <div class="span12">
+        <div id="minornavigation">
+            <ul class="nav nav-pills">
+                <li><a href="{% url liste_vorschlaege %}"><img src="http://www.opendata-hro.de/images/icons/page_white_stack.png" height="16px" width="16px" alt="None" class="inline-icon " /> {% trans "List" %}</a></li>
+                <li class="active"><a href="{% url liste_vorschlaege %}"><img src="http://www.opendata-hro.de/images/icons/page_white.png" height="16px" width="16px" alt="None" class="inline-icon " /> {% trans "Details" %}</a></li>
+                <li class="divider">|</li>
+                <li><a href="{% url sende_vorschlag %}"><img src="http://www.opendata-hro.de/images/icons/page_white_add.png" height="16px" width="16px" alt="None" class="inline-icon " /> {% trans "Request a dataset" %}</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="span9 content-outer">
+        <div id="content">
+            <div>
+                <div class="notes">
+                    <div id="notes-extract">{{ vorschlag.beschreibung }}</div>
+                </div>
+                <br />
+                <h3>{% trans "Revision history" %}</h3>
+                <table class="table table-bordered table-striped table-condensed groups">
+                    <tr>
+                        <th scope="col">{% trans "Status" %}</th>
+                        <th scope="col">{% trans "Details" %}</th>
+                        <th scope="col">{% trans "Date" %}</th>
+                    </tr>
+                    {% for status in status_daten %}
+                        <tr>
+                            <td><img src="{{ STATIC_URL }}icons/{{ status.bild }}" title="{{ status.titel }}" alt="{{ status.titel }}" /></td>
+                            <td>{{ status.daten.details }}</td>
+                            <td>{{ status.daten.erstellt_datum }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div> <!-- /content -->
+    </div>
+    <div class="span3 sidebar-outer">
+        <div id="sidebar">
+            <ul class="widget-list">
+                <primarysidebar>
+                </primarysidebar>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

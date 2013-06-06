@@ -1,0 +1,264 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-01-28 10:52+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+msgid "Incorrect, please try again."
+msgstr "Ihre Eingabe war falsch. Bitte versuchen Sie es erneut."
+
+#: src/opendata/settings.py:54
+msgid "German"
+msgstr "Deutsch"
+
+#: src/opendata/settings.py:55
+msgid "English"
+msgstr "Englisch"
+
+#: src/opendata_vorschlag/admin.py:12
+msgid "Publish request"
+msgstr "Datensatzanfrage(n) veröffentlichen"
+
+#: src/opendata_vorschlag/admin.py:20
+msgid "Unpublish request"
+msgstr "Datensatzanfrage(n) nicht veröffentlichen"
+
+#: src/opendata_vorschlag/models.py:7
+msgid "New"
+msgstr "offen"
+
+#: src/opendata_vorschlag/models.py:8
+msgid "Accepted"
+msgstr "wird umgesetzt"
+
+#: src/opendata_vorschlag/models.py:9
+msgid "Realized"
+msgstr "umgesetzt"
+
+#: src/opendata_vorschlag/models.py:10
+msgid "Not realizable"
+msgstr "nicht umsetzbar"
+
+#: src/opendata_vorschlag/models.py:19
+msgid "Dataset request"
+msgstr "Datensatzanfrage"
+
+#: src/opendata_vorschlag/models.py:20
+msgid "Dataset requests"
+msgstr "Datensatzanfragen"
+
+#: src/opendata_vorschlag/models.py:23
+msgid "Email address"
+msgstr "E-Mail-Adresse"
+
+#: src/opendata_vorschlag/models.py:23
+msgid ""
+"Please note that this information will not be published "
+"but used for further queries."
+msgstr "Diese Angabe wird unter keinen Umständen veröffentlicht, jedoch für interne Zwecke genutzt."
+
+#: src/opendata_vorschlag/models.py:24
+#: templates/opendata_vorschlag/liste_vorschlaege.html:28
+msgid "Subject"
+msgstr "Betreff"
+
+#: src/opendata_vorschlag/models.py:24
+msgid "Which dataset would you like to be published as open data?"
+msgstr "Welcher Datensatz soll als Open Data veröffentlicht werden?"
+
+#: src/opendata_vorschlag/models.py:25
+#: templates/opendata_vorschlag/liste_vorschlaege.html:29
+msgid "Description"
+msgstr "Beschreibung"
+
+#: src/opendata_vorschlag/models.py:25
+msgid ""
+"Please provide some details concerning your request, e.g. which "
+"information the dataset should provide."
+msgstr "Bitte machen Sie einige nähere Angaben zu Ihrer Anfrage, zum Beispiel zu den konkreten Informationen, die der Datensatz enthalten soll."
+
+#: src/opendata_vorschlag/models.py:26
+msgid "Public"
+msgstr "öffentlich"
+
+#: src/opendata_vorschlag/models.py:26
+msgid "Should this request be published?"
+msgstr "Soll diese Anfrage veröffentlicht werden?"
+
+#: src/opendata_vorschlag/models.py:30
+#, python-format
+msgid "%(subject)s (E-mail address of the author: %(email)s)"
+msgstr "%(subject)s (E-Mail-Adresse des Autors: %(email)s)"
+
+#: src/opendata_vorschlag/models.py:36
+msgid "Dataset request status"
+msgstr "Status der Anfrage"
+
+#: src/opendata_vorschlag/models.py:37
+msgid "Dataset request status'"
+msgstr "Status der Anfragen"
+
+#: src/opendata_vorschlag/models.py:46
+#, python-format
+msgid "%(request)s: %(status)d"
+msgstr ""
+
+#: src/opendata_vorschlag/views.py:92
+msgid "Unknown"
+msgstr "unbekannt"
+
+#: templates/basis_layout.html:7
+msgid "Welcome"
+msgstr "Willkommen"
+
+#: templates/basis_layout.html:29
+msgid "Beta version"
+msgstr "Beta-Version"
+
+#: templates/basis_layout.html:34
+msgid ""
+"The municipality of Rostock, currently, does not guarantee the full functionality of this web application yet since it is still a prototype. Possibly, some features change from time to time during this phase. The municipality of Rostock keeps working hard to put this web application on a productive level."
+msgstr "Zur Zeit garantiert die Hansestadt Rostock nicht für den vollen Funktionsumfang und stabilen Betrieb des vorliegenden Portals, da es noch ein Prototyp ist. Möglicherweise verändern sich während dieser Phase einige wenige Funktionen. Die Hansestadt Rostock bemüht sich jedoch das Portal zeitnah in den Produktivbetrieb zu überführen."
+
+#: templates/basis_layout.html:48
+msgid "The municipality of Rostock's platform for open data"
+msgstr "Portal für offene Daten der Hansestadt Rostock"
+
+#: templates/basis_layout.html:53
+msgid "Search"
+msgstr "Suche"
+
+#: templates/basis_layout.html:55
+msgid "Groups"
+msgstr "Kategorien"
+
+#: templates/basis_layout.html:57
+msgid "Tags"
+msgstr "Tags"
+
+#: templates/basis_layout.html:59
+msgid "Usage"
+msgstr "Nutzung"
+
+#: templates/basis_layout.html:61
+msgid "API"
+msgstr "API"
+
+#: templates/basis_layout.html:72
+msgid ""
+"This site works best with javascript enabled. Please configure the settings "
+"of your browser to use javascript."
+msgstr "Diese Website benötigt Javascript. Bitte aktivieren Sie Javascript in den Einstellungen Ihres Browsers."
+
+#: templates/basis_layout.html:88
+msgid "Help"
+msgstr "Hilfe"
+
+#: templates/basis_layout.html:89
+msgid "Privacy Policy"
+msgstr "Datenschutz"
+
+#: templates/basis_layout.html:90
+msgid "Imprint"
+msgstr "Impressum"
+
+#: templates/basis_layout.html:91
+msgid "Terms of use"
+msgstr "Nutzungsbedingungen"
+
+#: templates/basis_layout.html:92
+msgid "Revisions"
+msgstr "Revisionen"
+
+#: templates/basis_layout.html:93
+msgid "Statistics"
+msgstr "Statistiken"
+
+#: templates/basis_layout.html:94
+msgid "Login"
+msgstr "Anmeldung"
+
+#: templates/basis_layout.html:102
+msgid "Language"
+msgstr "Sprache"
+
+#: templates/basis_layout.html:121
+msgid "OpenData.HRO is based on"
+msgstr "OpenData.HRO basiert auf"
+
+msgid "v1.8 and is also present on"
+msgstr "v1.8 und ist auch bei"
+
+#: templates/opendata_vorschlag/details_vorschlag.html:3
+#: templates/opendata_vorschlag/details_vorschlag.html:16
+#: templates/opendata_vorschlag/liste_vorschlaege.html:3
+#: templates/opendata_vorschlag/liste_vorschlaege.html:14
+#: templates/opendata_vorschlag/sende_vorschlag.html:3
+#: templates/opendata_vorschlag/sende_vorschlag.html:7
+#: templates/opendata_vorschlag/sende_vorschlag.html:14
+#: templates/opendata_vorschlag/sende_vorschlag_erfolgreich.html:3
+#: templates/opendata_vorschlag/sende_vorschlag_erfolgreich.html:14
+msgid "Request a dataset"
+msgstr "Datensatzanfrage erstellen"
+
+#: templates/opendata_vorschlag/details_vorschlag.html:13
+#: templates/opendata_vorschlag/liste_vorschlaege.html:13
+#: templates/opendata_vorschlag/sende_vorschlag.html:13
+#: templates/opendata_vorschlag/sende_vorschlag_erfolgreich.html:13
+msgid "List"
+msgstr "Übersicht"
+
+#: templates/opendata_vorschlag/details_vorschlag.html:14
+#: templates/opendata_vorschlag/details_vorschlag.html:33
+msgid "Details"
+msgstr "Details"
+
+#: templates/opendata_vorschlag/details_vorschlag.html:29
+msgid "Revision history"
+msgstr "Revisionsgeschichte"
+
+#: templates/opendata_vorschlag/details_vorschlag.html:32
+#: templates/opendata_vorschlag/liste_vorschlaege.html:30
+msgid "Status"
+msgstr "Status"
+
+#: templates/opendata_vorschlag/details_vorschlag.html:34
+msgid "Date"
+msgstr "Datum"
+
+#: src/opendata_vorschlag/forms.py:7
+msgid "CAPTCHA"
+msgstr "Sicherheitsabfrage"
+
+#: templates/opendata_vorschlag/liste_vorschlaege.html:42
+#, python-format
+msgid ""
+"There has not been any request yet. Would you like to <a href=\"%(url)s"
+"\">request a dataset</a>?"
+msgstr "Es sind bislang noch keine Datensatzanfragen eingegangen. Möchten Sie eine neue <a href=\"%(url)s\">Datensatzanfrage erstellen</a>?"
+
+#: templates/opendata_vorschlag/sende_vorschlag.html:53
+msgid "Submit"
+msgstr "abschicken"
+
+#: templates/opendata_vorschlag/sende_vorschlag_erfolgreich.html:23
+#, python-format
+msgid ""
+"Your dataset request has been successfully submitted.<br><a href=\"%(url)s"
+"\">List already requested datasets.</a>"
+msgstr "Ihre Datensatzanfrage wurde erfolgreich erstellt.<br><a href=\"%(url)s\">Übersicht der Datensatzanfragen anzeigen.</a>"
+

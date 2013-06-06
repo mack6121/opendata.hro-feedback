@@ -1,0 +1,22 @@
+Sehr geehrte(r) NutzerIn von OpenData.HRO,
+
+vielen Dank für Ihre Anfrage nach neuen Datensätzen. Wir haben folgende Daten erhalten:
+
+===================================
+Betreff
+{{ betreff }}
+
+Beschreibung
+{{ beschreibung }}
+===================================
+
+Ihre Anfrage ist nach einer redaktionellen Prüfung unter folgender URL erreichbar: {{ url }}
+
+Bei Neuigkeiten zu dieser Anfrage informieren wir Sie per E-Mail.
+
+Vielen Dank und mit freundlichen Grüßen
+
+Ihr OpenData.HRO-Team
+
+-- 
+Dies ist eine automatisch generierte E-Mail.

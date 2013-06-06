@@ -1,0 +1,69 @@
+{% extends "basis_layout.html" %}{% load i18n %}
+
+{% block titel %}{% trans "Request a dataset" %}{% endblock %}
+
+{% block inhalt %}
+<h1 class="page_heading">
+    {% trans "Request a dataset" %}
+</h1>
+<div class="row">
+    <div class="span12">
+        <div id="minornavigation">
+            <ul class="nav nav-pills">
+                <li><a href="{% url liste_vorschlaege %}"><img src="http://www.opendata-hro.de/images/icons/page_white_stack.png" height="16px" width="16px" alt="None" class="inline-icon " /> {% trans "List" %}</a></li>
+                <li class="active"><a href="{% url sende_vorschlag %}"><img src="http://www.opendata-hro.de/images/icons/page_white_add.png" height="16px" width="16px" alt="None" class="inline-icon " /> {% trans "Request a dataset" %}</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="span9 content-outer">
+        <div id="content">
+            <div>
+                <form action="." method="post" class="form-horizontal">{% csrf_token %}
+                    {% if form_vorschlag.non_field_errors %}
+                        <section class="error">
+                            <div class="error-msg"><ul>
+                                {% for error in form_vorschlag.non_field_errors %}
+                                    <li>{{ error|safe }}</li>
+                                {% endfor %}
+                            </ul></div>
+                        </section>
+                    {% endif %}
+                    <fieldset>
+                        {% for field in form_vorschlag %}
+                            <div class="control-group">
+                                <label class="control-label" for="{{ field.html_name }}">{{ field.label }}</label>
+                                <div class="controls">
+                                    {% if field.help_text %}
+                                        <p style="padding-top:5px; margin-bottom:5px">{{ field.help_text|safe }}</p>
+                                    {% endif %}
+                                    {% if field.errors %}
+                                        <div style="color:#F00;{% if not field.help_text %}padding-top:5px{% endif %}"><ul>
+                                            {% for error in field.errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        </ul></div>
+                                    {% endif %}
+                                    {{ field }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                        <div class="form-actions">
+                            <button name="s" type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
+                        </div>
+                      </fieldset>
+                </form>
+            </div>
+        </div> <!-- /content -->
+    </div>
+    <div class="span3 sidebar-outer">
+        <div id="sidebar">
+            <ul class="widget-list">
+                <primarysidebar>
+                </primarysidebar>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
