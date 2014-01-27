@@ -1,0 +1,57 @@
+{% load simple_math %}
+
+{% if seitenzahl > 1 %}
+<div class='pagination'>
+	<ul>
+		{% if seite > 1 %}
+			<li>
+				<a href="?page={{ seite|subtract:1 }}">&laquo; zur&uuml;ck</a>
+			</li>
+			<li>
+				<a href="?page=1">1</a>
+			</li>
+		{% endif %}
+
+		{% if seite|subtract:3 > 1 %}
+			<li class="disabled">
+				<a href="#">...</a>
+			</li>
+		{% endif %}
+
+		{% for i in "21" %}
+			{% if seite|subtract:i > 1 %}
+				<li>
+					<a href="?page={{ seite|subtract:i }}">{{ seite|subtract:i }}</a>
+				</li>
+			{% endif %}
+		{% endfor %}
+
+		<li class="active">
+			<a href="?page={{ seite }}">{{ seite }}</a>
+		</li>
+
+		{% for i in "12" %}
+			{% if seite|add:i < seitenzahl %}
+				<li>
+					<a href="?page={{ seite|add:i }}">{{ seite|add:i }}</a>
+				</li>
+			{% endif %}
+		{% endfor %}
+		
+		{% if seite|add:3 < seitenzahl %}
+			<li class="disabled">
+				<a href="#">...</a>
+			</li>
+		{% endif %}
+
+		{% if seite < seitenzahl %}
+			<li>
+				<a href="?page={{ seitenzahl }}">{{ seitenzahl }}</a>
+			</li>
+			<li>
+				<a href="?page={{ seite|add:'1' }}">vor &raquo;</a>
+			</li>
+		{% endif %}
+	</ul>
+</div>
+{% endif %}

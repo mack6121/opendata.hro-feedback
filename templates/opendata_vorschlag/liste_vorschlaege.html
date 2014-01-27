@@ -1,6 +1,6 @@
 {% extends "basis_layout.html" %}{% load i18n %}
 
-{% block titel %}{% trans "Request a dataset" %}{% endblock %}
+{% block titel %}{% trans "Dataset requests" %}{% endblock %}
 
 {% block inhalt %}
 <h1 class="page_heading">
@@ -16,12 +16,13 @@
         </div>
     </div>
 </div>
+
 <div class="row">
     <div class="span9 content-outer">
         <div id="content">
             <div>
                 {% if daten %}
-                    {{ pagination|safe }}
+                    {% include "opendata_vorschlag/includes/pagination.html" with seitenanzahl=seitenzahl seite=seite %}
                     <!-- li class="active"><a href="/revision?page=1">1</a></li> <li><a href="/revision?page=2">2</a></li> <li><a href="/revision?page=3">3</a></li> <span class="pager_dotdot"><li class="disabled"><a href="#">...</a></li></span> <li><a href="/revision?page=8">8</a></li> </ul></div-->
                     <table class="table table-bordered table-striped table-condensed groups">
                         <tr>
@@ -32,14 +33,16 @@
                         {% for v in daten %}
                             <tr>
                               <td><a href="{% url details_vorschlag v.vorschlag.id %}">{{ v.vorschlag.betreff }}</a></td>
-                              <td>{{ v.vorschlag.beschreibung }}</td>
+                              <td>{{ v.vorschlag.beschreibung|truncatechars:250 }}</td>
                               <td>{% if v.statusbild %}<img src="{{ STATIC_URL }}icons/{{ v.statusbild }}" title="{{ v.status }}" alt="{{ v.status }}" />{% else  %}{{ v.status }}{% endif %}</td>
                             </tr>
                         {% endfor %}
                     </table>
-                    {{ pagination|safe }}
+                    {% include "opendata_vorschlag/includes/pagination.html" with seitenanzahl=seitenzahl seite=seite %}
                 {% else %}
+                <div style="margin-top:20px; margin-bottom:30px; margin-left:10px">
                     <p>{% blocktrans with url=url_sende_vorschlag %}There has not been any request yet. Would you like to <a href="{{ url }}">request a dataset</a>?{% endblocktrans %}</p>
+                </div>
                 {% endif %}
             </div>
         </div> <!-- /content -->

@@ -4,13 +4,19 @@ from django.utils.translation import ugettext_lazy as _
 
 
 # Bei Aenderungen das sende_statusaenderungen Skript entsprechend anpassen
+VORSCHLAG_STATUS_NEU = 1
+VORSCHLAG_STATUS_AKZEPTIERT = 2
+VORSCHLAG_STATUS_REALISIERT = 3
+VORSCHLAG_STATUS_NICHT_REALISIERBAR = 4
+
+DEFAULT_VORSCHLAG_STATUS = VORSCHLAG_STATUS_NEU
+
 VORSCHLAG_STATUS = (
-    (1, _("New")),
-    (2, _("Accepted")),
-    (3, _("Realized")),
-    (4, _("Not realizable"))
+    (VORSCHLAG_STATUS_NEU, _("New")),
+    (VORSCHLAG_STATUS_AKZEPTIERT, _("Accepted")),
+    (VORSCHLAG_STATUS_REALISIERT, _("Realized")),
+    (VORSCHLAG_STATUS_NICHT_REALISIERBAR, _("Not realizable"))
 )
-DEFAULT_VORSCHLAG_STATUS = 1
 
 
 
@@ -20,14 +26,14 @@ class Vorschlag(models.Model):
         verbose_name_plural = _("Dataset requests")
         ordering = ["-erstellt_datum"]
     
-    email = models.EmailField(max_length=128,verbose_name=_("Email address"), help_text=_("Please note that this information will not be published but used for further queries."))
+    email = models.EmailField(max_length=128, verbose_name=_("Email address"), help_text=_("Please note that this information will not be published but used for further queries."))
     betreff = models.CharField(max_length=64, verbose_name=_("Subject"), help_text=_("Which dataset would you like to be published as open data?"))
-    beschreibung = models.TextField(max_length=4096,verbose_name=_("Description"), help_text=_("Please provide some details concerning your request, e.g. which information the dataset should provide."))
+    beschreibung = models.TextField(max_length=4096, verbose_name=_("Description"), help_text=_("Please provide some details concerning your request, e.g. which information the dataset should provide."))
     freigegeben = models.BooleanField(default=False, verbose_name=_("Public"), help_text=_("Should this request be published?"))
     erstellt_datum = models.DateTimeField(auto_now_add=True)
     
     def __unicode__(self):
-        return _("%(subject)s (E-mail address of the author: %(email)s)") % {"subject": self.betreff, "email": self.email,}
+        return _("%(subject)s (E-mail address of the author: %(email)s)") % {"subject": self.betreff, "email": self.email, }
 
 
 
@@ -44,4 +50,6 @@ class VorschlagStatus(models.Model):
     erstellt_datum = models.DateTimeField(auto_now_add=True)
     
     def __unicode__(self):
-        return _("%(request)s: %(status)d") % {"request": self.vorschlag, "status": self.status,}
+        return _("%(request)s: %(status)d") % {"request": self.vorschlag, "status": self.status, }
+
+

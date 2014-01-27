@@ -1,18 +1,17 @@
-from django.template import loader
-from django.template.context import RequestContext
-from django.http import HttpResponse, Http404
+from django.http import Http404
 from opendata_vorschlag.forms import VorschlagForm
 from django.views.decorators.csrf import csrf_protect
 from django.core.urlresolvers import reverse
 from django.utils.translation import activate
-from opendata_vorschlag.models import Vorschlag, VorschlagStatus,\
+from opendata_vorschlag.models import Vorschlag, VorschlagStatus, \
     DEFAULT_VORSCHLAG_STATUS, VORSCHLAG_STATUS
-from opendata_vorschlag.helpers import get_bezeichnung_auswahl, get_status_bild,\
+from opendata_vorschlag.helpers import get_status_bild, \
     sende_vorschlag_email
 from django.utils.translation import ugettext_lazy as _
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.conf import settings
 from urlparse import urljoin
+import math
 
 
 
@@ -23,26 +22,21 @@ def sende_vorschlag(request):
     
     if request.method == "POST":
         if form_vorschlag.is_valid():
-            vorschlag = Vorschlag.objects.create(
-                email = form_vorschlag.cleaned_data["email"],
-                betreff = form_vorschlag.cleaned_data["betreff"],
-                beschreibung = form_vorschlag.cleaned_data["beschreibung"],
-                freigegeben = False,
-            )
+            vorschlag = form_vorschlag.save(commit=False)
+            vorschlag.freigegeben = False
+            vorschlag.save()
             
             VorschlagStatus.objects.create(
-                vorschlag = vorschlag,
+                vorschlag=vorschlag,
                 # Dieser String wird bewusst nicht zur Uebersetzung angeboten, da die Anfragen vor allem
                 # in Deutscher Sprache sein werden und es ansonsten zu einer inkonsistenten Umsetzung
                 # kommen kann
-                details = "Eine neue Datensatzanfrage wurde erstellt.",
-                status = DEFAULT_VORSCHLAG_STATUS,
-                mitgeteilt = True,
+                details="Eine neue Datensatzanfrage wurde erstellt.",
+                status=DEFAULT_VORSCHLAG_STATUS,
+                mitgeteilt=True,
             )
             
-            sende_vorschlag_email(vorschlag.email, vorschlag.betreff, vorschlag.beschreibung, vorschlag.id)
-            
-            t = loader.get_template("opendata_vorschlag/sende_vorschlag_erfolgreich.html")
+            sende_vorschlag_email(vorschlag)
             
             sprache = request.LANGUAGE_CODE
             activate("en")
@@ -51,15 +45,13 @@ def sende_vorschlag(request):
             url_de = reverse("sende_vorschlag")
             activate(sprache)
             
-            c = RequestContext(request, {
+            template_daten = {
                     "sprache": sprache,
                     "url_liste_vorschlaege": reverse("liste_vorschlaege"),
                     "url_en": url_en,
                     "url_de": url_de,
-            })
-            return HttpResponse(t.render(c))
-    
-    t = loader.get_template("opendata_vorschlag/sende_vorschlag.html")
+            }
+            return render(request, "opendata_vorschlag/sende_vorschlag_erfolgreich.html", template_daten)
     
     sprache = request.LANGUAGE_CODE
     activate("en")
@@ -68,85 +60,66 @@ def sende_vorschlag(request):
     url_de = reverse("sende_vorschlag")
     activate(sprache)
     
-    c = RequestContext(request, {
+    template_daten = {
             "form_vorschlag": form_vorschlag,
             "sprache": sprache,
             "url_en": url_en,
-            "url_de": url_de, 
-    })
-    return HttpResponse(t.render(c))
+            "url_de": url_de,
+    }
+    return render(request, "opendata_vorschlag/sende_vorschlag.html", template_daten)
 
 
 
 def liste_vorschlaege(request):
     
-    offset = 0
-    page = 1
+    seite = 1
+    # Falls moeglich lies die anzuzeigende Seite aus dem GET-Parameter page
+    # und berechnen den notwendigen Offset
+    if request.GET.get("page", None):
+        try:
+            seite = int(request.GET["page"])
+        except ValueError:
+            seite = 1
+        finally:
+            seite = 1 if seite < 1 else seite
     
-    if request.GET.has_key("page"):
-        tmp = request.GET["page"]
-        if tmp and int(tmp) >= 1:
-            page = int(request.GET["page"])
-            offset = (page-1)*10
+    offset = (seite - 1) * 10
     
-    vorschlaege = Vorschlag.objects.filter(freigegeben=True).order_by("-erstellt_datum")
     daten = []
-    for v in vorschlaege[offset:offset+10]:
-        status = list(v.vorschlagstatus_set.all()[:1])
+    vorschlaege = Vorschlag.objects.filter(freigegeben=True).order_by("-erstellt_datum")
+    
+    seitenzahl = int(math.ceil(vorschlaege.count() / 10.0))
+    
+    # Wenn nicht genuegend Eintraege vorhanden sind, dann leite den Nutzer auf die letzte Seite
+    if offset > 0 and vorschlaege.count() < offset + 10:
+        return redirect(reverse("liste_vorschlaege") + "?page=%i" % (seitenzahl,))
+    
+    for v in vorschlaege[offset:offset + 10]:
+        status = list(v.vorschlagstatus_set.all().order_by("-erstellt_datum")[:1])
         if status:
-            s = status[0]
-            daten.append({"vorschlag": v, "status": get_bezeichnung_auswahl(VORSCHLAG_STATUS,s.status), "statusbild": get_status_bild(s.status)})
+            s = status[0] 
+            daten.append({"vorschlag": v, "status": dict(VORSCHLAG_STATUS).get(s.status, _("Unknown")), "statusbild": get_status_bild(s.status)})
         else:
             daten.append({"vorschlag": v, "status": _("Unknown")})
     
-    num_pages = len(vorschlaege) / 10 + (1 if len(vorschlaege) % 10 else 0)
-    
-    pagination = ""
-    if num_pages > 1:
-        pagination = "<div class='pagination'><ul>"
-        if page > 1:
-            pagination += "<li><a href=\"?page=%d\">&laquo; zur&uuml;ck</a></li><li><a href=\"?page=1\">1</a>" % (page-1,)
-        
-        if page-3 > 1:
-            pagination += "<li class=\"disabled\"><a href=\"#\">...</a></li>"
-        
-        for i in [2,1]:
-            if page-i > 1:
-                pagination += "<li><a href=\"?page=%d\">%d</a></li>" % (page-i, page-i,)
-        
-        pagination += "<li class=\"active\"><a href=\"?page=%d\">%d</a></li>" % (page, page,)
-        
-        for i in [1,2]:
-            if page+i < num_pages:
-                pagination += "<li><a href=\"?page=%d\">%d</a></li>" % (page+i, page+i,)
-        
-        if page+3 < num_pages:
-            pagination += "<li class=\"disabled\"><a href=\"#\">...</a></li>"
-        
-        if page < num_pages:
-            pagination += "<li><a href=\"?page=%d\">%d</a><li><a href=\"?page=%d\">vor &raquo;</a></li>" % (num_pages, num_pages, page+1,)
-        
-        pagination += "</ul></div>"
-    
-    
-    t = loader.get_template("opendata_vorschlag/liste_vorschlaege.html")
-    
     sprache = request.LANGUAGE_CODE
     activate("en")
-    url_en = reverse("liste_vorschlaege") + "?page=%d" % (page,)
+    url_en = reverse("liste_vorschlaege") + "?page=%d" % (seite,)
     activate("de")
-    url_de = reverse("liste_vorschlaege") + "?page=%d" % (page,)
+    url_de = reverse("liste_vorschlaege") + "?page=%d" % (seite,)
     activate(sprache)
     
-    c = RequestContext(request, {
+    template_daten = {
             "daten": daten,
             "url_sende_vorschlag": reverse("sende_vorschlag"),
             "sprache": sprache,
             "url_en": url_en,
             "url_de": url_de,
-            "pagination": pagination,
-    })
-    return HttpResponse(t.render(c))
+            "seite": seite,
+            "seitenzahl": seitenzahl,
+    }
+    
+    return render(request, "opendata_vorschlag/liste_vorschlaege.html", template_daten)
 
 
 
@@ -161,9 +134,7 @@ def details_vorschlag(request, vorschlag_id):
     
     status_daten = []
     for s in status:
-        status_daten.append({"daten":s, "titel": get_bezeichnung_auswahl(VORSCHLAG_STATUS, s.status),"bild": get_status_bild(s.status)})
-    
-    t = loader.get_template("opendata_vorschlag/details_vorschlag.html")
+        status_daten.append({"daten":s, "titel": dict(VORSCHLAG_STATUS).get(s.status, _("Unknown")), "bild": get_status_bild(s.status)})
     
     sprache = request.LANGUAGE_CODE
     activate("en")
@@ -172,20 +143,20 @@ def details_vorschlag(request, vorschlag_id):
     url_de = reverse("details_vorschlag", args=(vorschlag_id,))
     activate(sprache)
     
-    c = RequestContext(request, {
+    template_daten = {
             "vorschlag": vorschlag,
             "status_daten": status_daten,
             "url_sende_vorschlag": reverse("sende_vorschlag"),
             "sprache": sprache,
             "url_en": url_en,
             "url_de": url_de,
-    })
-    return HttpResponse(t.render(c))
+    }
+    return render(request, "opendata_vorschlag/details_vorschlag.html", template_daten)
 
 
 
 def basic_redirect(request):
-    return redirect(urljoin(getattr(settings, "BASE_URL"), "/feedback/"+request.LANGUAGE_CODE+"/requested-datasets/"))
+    return redirect(urljoin(getattr(settings, "BASE_URL"), "/feedback/" + request.LANGUAGE_CODE + "/requested-datasets/"))
 
 
 

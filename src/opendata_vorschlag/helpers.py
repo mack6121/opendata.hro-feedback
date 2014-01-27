@@ -5,48 +5,41 @@ from django.template.context import Context
 from django.conf import settings
 from urlparse import urljoin
 from django.core.urlresolvers import reverse
-
-
-
-def get_bezeichnung_auswahl(auswahl, wert):
-    for (w, n) in auswahl:
-        if wert == w:
-            return n
-    
-    return None
+from opendata_vorschlag.models import VORSCHLAG_STATUS_NEU,\
+    VORSCHLAG_STATUS_AKZEPTIERT, VORSCHLAG_STATUS_REALISIERT,\
+    VORSCHLAG_STATUS_NICHT_REALISIERBAR
 
 
 
 def get_status_bild(status):
-    if status == 1:
+    if status == VORSCHLAG_STATUS_NEU:
         return "idea-red-22px.png"
-    elif status == 2:
+    elif status == VORSCHLAG_STATUS_AKZEPTIERT:
         return "idea-yellow-22px.png"
-    elif status == 3:
+    elif status == VORSCHLAG_STATUS_REALISIERT:
         return "idea-green-22px.png"
-    elif status == 4:
+    elif status == VORSCHLAG_STATUS_NICHT_REALISIERBAR:
         return "idea-black-22px.png"
     else:
         return None
 
 
 
-def sende_vorschlag_email(emailadresse, vorschlag_betreff, vorschlag_beschreibung, vorschlag_id):
-    emails_fehler = False
+def sende_vorschlag_email(vorschlag):
     try:
         email_text = get_template("emails/opendata_vorschlag/sende_vorschlag.txt")
         daten = Context({
-                         "betreff": vorschlag_betreff,
-                         "beschreibung": vorschlag_beschreibung,
-                         "url": urljoin(getattr(settings, "BASE_URL"),reverse("details_vorschlag", args=(vorschlag_id,)))
+                         "betreff": vorschlag.betreff,
+                         "beschreibung": vorschlag.beschreibung,
+                         "url": urljoin(getattr(settings, "BASE_URL"), reverse("details_vorschlag", args=(vorschlag.id,)))
                          })
         email_nachricht = email_text.render(daten)
         betreff = "OpenData.HRO: Neue Datensatzanfrage"
-        email = EmailMessage(betreff, email_nachricht, "opendata.hro@rostock.de", [emailadresse], ["opendata.hro@rostock.de"])
+        email = EmailMessage(betreff, email_nachricht, "opendata.hro@rostock.de", [vorschlag.email], ["opendata.hro@rostock.de"])
         email.send()
     except SMTPException:
-        emails_fehler = True
+        return False
     except BadHeaderError:
-        emails_fehler = True
+        return False
     
-    return not emails_fehler
+    return True

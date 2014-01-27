@@ -9,7 +9,7 @@ def gib_vorschlaege_frei(modeladmin, request, queryset):
     for vorschlag in queryset:
         vorschlag.freigegeben = True
         vorschlag.save()
-gib_vorschlaege_frei.short_description=_("Publish request")
+gib_vorschlaege_frei.short_description = _("Publish request")
 
 
 
@@ -17,7 +17,7 @@ def verberge_vorschlaege(modeladmin, request, queryset):
     for vorschlag in queryset:
         vorschlag.freigegeben = False
         vorschlag.save()
-verberge_vorschlaege.short_description=_("Unpublish request")
+verberge_vorschlaege.short_description = _("Unpublish request")
 
 
 
@@ -30,7 +30,7 @@ class VorschlagAdmin(VersionAdmin):
     list_display = ("betreff", "email", "freigegeben", "erstellt_datum")
     search_fields = ["betreff", "email", "beschreibung"]
     list_filter = ("erstellt_datum", "freigegeben")
-    actions = [gib_vorschlaege_frei, verberge_vorschlaege,]
+    actions = [gib_vorschlaege_frei, verberge_vorschlaege, ]
     inlines = [ VorschlagStatusInline, ]
     
     def get_actions(self, request):
